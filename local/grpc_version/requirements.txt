@@ -1,0 +1,14 @@
+grpcio
+grpcio-tools
+matplotlib
+Pillow
+numpy<2.0
+opencv-python-headless
+rembg
+onnxruntime
+torch
+torchvision
+torchaudio
+requests
+rich
+openpyxl

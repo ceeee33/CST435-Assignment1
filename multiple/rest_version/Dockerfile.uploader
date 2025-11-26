@@ -1,0 +1,20 @@
+# Dockerfile for Uploader Service (REST) - Node.js
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package.json package-lock.json* ./
+RUN npm install --omit=dev || npm install --production
+
+# Copy service source
+COPY services/uploader_service.js services/uploader_service.js
+
+# Expose uploader port
+EXPOSE 50060
+
+# Run the uploader service
+CMD ["npm", "start"]
+
+
+

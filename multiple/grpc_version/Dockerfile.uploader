@@ -1,0 +1,21 @@
+# Dockerfile for Uploader Service (gRPC) - Node.js
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package.json package-lock.json* ./
+RUN npm install --omit=dev || npm install --production
+
+# Copy service source
+COPY services/uploader_service.js services/uploader_service.js
+
+# Copy proto so runtime checks can find it
+COPY pipeline.proto pipeline.proto
+COPY pipeline.proto services/pipeline.proto
+
+# Expose uploader port
+EXPOSE 50040
+
+# Run the uploader service
+CMD ["npm", "start"]

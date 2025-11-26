@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package image_pipeline;
+
+message UploadRequest {
+  bytes image_data = 1;
+  string file_name = 2;
+}
+
+message UploadResponse {
+  bytes image_data = 1;
+  string file_name = 2;
+}
+
+message NoiseReductionRequest {
+  bytes image_data = 1;
+}
+
+message NoiseReductionResponse {
+  bytes image_data = 1;
+}
+
+message BackgroundRemoveRequest {
+  bytes image_data = 1;
+}
+
+message BackgroundRemoveResponse {
+  bytes image_data = 1; // PNG bytes with alpha if present
+}
+
+message ClassifyRequest {
+  bytes image_data = 1;
+}
+
+message ClassifyResponse {
+  string label = 1;
+}
+
+message ProcessRequest {
+  bytes image_data = 1;
+  string file_name = 2;
+}
+
+message ProcessResponse {
+  bytes processed_image_data = 1;
+  string classification_label = 2;
+  bool success = 3;
+  string message = 4;
+  float response_time_ms = 5;
+  bytes timeline_plot_image = 6;
+  string timeline_plot_filename = 7;
+}
+
+service ImageUploader {
+  rpc Upload (UploadRequest) returns (UploadResponse);
+}
+
+service NoiseReducer {
+  rpc Reduce (NoiseReductionRequest) returns (NoiseReductionResponse);
+}
+
+service BackgroundRemover {
+  rpc Remove (BackgroundRemoveRequest) returns (BackgroundRemoveResponse);
+}
+
+service ImageClassifier {
+  rpc Classify (ClassifyRequest) returns (ClassifyResponse);
+}
+
+// Orchestrator service that calls the above microservices
+service ImageProcessorOrchestrator {
+  rpc Process (ProcessRequest) returns (ProcessResponse);
+}
+
+

@@ -1,0 +1,26 @@
+# Dockerfile for Background Remover Service (REST)
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy only background remover requirements
+COPY requirements/requirements.background.txt requirements.txt
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy only necessary files for uploader
+COPY services/background_service.py services/
+COPY services/__init__.py services/
+
+# Expose background remover port
+EXPOSE 50062
+
+# Run the background remover service
+CMD ["python", "services/background_service.py"]
+

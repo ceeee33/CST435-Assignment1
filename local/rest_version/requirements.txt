@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+requests
+python-multipart
+matplotlib
+pillow
+numpy
+opencv-python
+torch
+torchvision
+rembg
+rich
+onnxruntime
+openpyxl

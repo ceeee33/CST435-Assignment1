@@ -1,0 +1,31 @@
+# Dockerfile for Noise Reducer Service (can be deployed on separate device)
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install system dependencies for OpenCV
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy only noise reducer requirements
+COPY requirements/requirements.noise.txt requirements.txt
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy only necessary files for noise reducer
+COPY pipeline.proto .
+COPY generate_protos.py .
+COPY services/noise_service.py services/
+COPY services/__init__.py services/
+
+# Generate gRPC stubs
+RUN python generate_protos.py
+
+# Expose noise reducer port
+EXPOSE 50041
+
+# Run the noise reducer service
+CMD ["python", "services/noise_service.py"]
+

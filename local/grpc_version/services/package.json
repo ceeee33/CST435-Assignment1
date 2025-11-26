@@ -1,0 +1,17 @@
+{
+  "name": "uploader-service",
+  "version": "1.0.0",
+  "description": "Node.js gRPC uploader service",
+  "main": "uploader_service.js",
+  "scripts": {
+    "start": "node uploader_service.js"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.8.0",
+    "@grpc/proto-loader": "^0.7.0",
+    "google-protobuf": "^3.21.2"
+  },
+  "devDependencies": {
+    "grpc-tools": "^1.12.4"
+  }
+}

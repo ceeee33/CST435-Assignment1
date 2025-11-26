@@ -1,0 +1,29 @@
+# Minimal Dockerfile for Orchestrator Service Only (REST)
+# This only includes what the orchestrator needs - no other service files
+FROM python:3.11-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Install minimal system dependencies (only for matplotlib)
+RUN apt-get update && apt-get install -y \
+    libfontconfig1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy only orchestrator requirements
+COPY requirements/requirements.orchestrator.txt requirements.txt
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy only necessary files for orchestrator
+COPY services/processor_service.py services/
+COPY services/__init__.py services/
+
+# Expose only the orchestrator port
+EXPOSE 50051
+
+ENV PYTHONUNBUFFERED=1
+
+# Run the orchestrator service
+CMD ["python", "-u", "services/processor_service.py"]
+

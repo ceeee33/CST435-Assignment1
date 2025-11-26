@@ -1,0 +1,25 @@
+# Docker Compose for Orchestrator Only
+# Other services (uploader, noise, background, classifier) are deployed on remote devices
+# Configure their addresses via environment variables
+
+services:
+  # Orchestrator service - coordinates remote services
+  orchestrator:
+    build: 
+      context: .
+      dockerfile: Dockerfile.orchestrator
+    image: grpc_multiple_orchestrator
+    container_name: grpc_multiple_orchestrator
+    command: ["python", "services/processor_service.py"]
+    ports:
+      - "50030:50030"
+    environment:
+      # Configure remote service addresses (change to your remote device IPs)
+      - UPLOADER_ADDR=172.20.10.5:50040      # Remote device IP for uploader
+      - NOISE_ADDR=172.20.10.5:50041          # Remote device IP for noise reducer
+      - BACKGROUND_ADDR=172.20.10.4:50042    # Remote device IP for background remover
+      - CLASSIFIER_ADDR=192.168.100.6:50043     # Remote device IP for classifier
+    volumes:
+      - ./results:/app/results
+    # No depends_on since services are on remote devices
+    # Make sure remote services are accessible before starting orchestrator

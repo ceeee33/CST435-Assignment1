@@ -1,0 +1,8 @@
+# Requirements for Background Remover service only
+grpcio
+grpcio-tools
+Pillow
+numpy<2.0
+rembg
+onnxruntime
+

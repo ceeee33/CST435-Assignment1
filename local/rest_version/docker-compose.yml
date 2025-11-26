@@ -1,0 +1,62 @@
+# version: "3.9"
+
+services:
+  local-rest-uploader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: uploader
+    image: local-rest-uploader:latest
+    command: ["npm", "start"]
+    ports:
+      - "50060:50060"
+
+  local-rest-noise:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local-rest-noise:latest
+    command: uvicorn services.noise_service:app --host 0.0.0.0 --port 50061
+    ports:
+      - "50061:50061"
+
+  local-rest-background:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local-rest-background:latest
+    command: uvicorn services.background_service:app --host 0.0.0.0 --port 50062
+    ports:
+      - "50062:50062"
+
+  local-rest-classifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local-rest-classifier:latest
+    command: uvicorn services.classifier_service:app --host 0.0.0.0 --port 50063
+    ports:
+      - "50063:50063"
+
+  local-rest-orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local-rest-orchestrator:latest
+    command: uvicorn services.processor_service:app --host 0.0.0.0 --port 50051
+    environment:
+      UPLOADER_URL: http://local-rest-uploader:50060/upload
+      NOISE_URL: http://local-rest-noise:50061/reduce
+      BACKGROUND_URL: http://local-rest-background:50062/remove
+      CLASSIFIER_URL: http://local-rest-classifier:50063/classify
+    depends_on:
+      - local-rest-uploader
+      - local-rest-noise
+      - local-rest-background
+      - local-rest-classifier
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./results:/app/results
+    

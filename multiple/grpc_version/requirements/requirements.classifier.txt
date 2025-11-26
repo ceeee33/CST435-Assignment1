@@ -1,0 +1,11 @@
+# Requirements for Classifier service only
+grpcio
+grpcio-tools
+Pillow
+numpy<2.0
+opencv-python-headless
+torch
+torchvision
+torchaudio
+requests
+

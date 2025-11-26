@@ -1,0 +1,8 @@
+# Minimal requirements for Orchestrator service only
+grpcio
+grpcio-tools
+rich
+matplotlib
+Pillow
+openpyxl
+

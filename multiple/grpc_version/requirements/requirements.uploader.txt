@@ -1,0 +1,4 @@
+# Requirements for Uploader service only
+grpcio
+grpcio-tools
+

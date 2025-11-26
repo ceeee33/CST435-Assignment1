@@ -1,0 +1,25 @@
+# Docker Compose for Orchestrator Only
+# Other services (uploader, noise, background, classifier) are deployed on remote devices
+# Configure their addresses via environment variables
+
+services:
+  # Orchestrator service - coordinates remote services
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile.orchestrator
+    image: rest_multiple_orchestrator
+    container_name: rest_multiple_orchestrator
+    command: uvicorn services.processor_service:app --host 0.0.0.0 --port 50051
+    environment:
+      # Set these to the reachable URLs of the remote devices where the other services run.
+      UPLOADER_URL: http://172.20.10.3:50060/upload
+      NOISE_URL: http://172.20.10.3:50061/reduce
+      BACKGROUND_URL: http://172.20.10.3:50062/remove
+      CLASSIFIER_URL: http://172.20.10.3:50063/classify
+      # Explicit opt-in: set USE_LOCAL=true only when all services run on the same host and you want localhost fallbacks
+      # USE_LOCAL: "false"
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./results:/app/results

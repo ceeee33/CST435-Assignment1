@@ -1,0 +1,81 @@
+# version: '3.9'
+
+services:
+  local-grpc-uploader:
+    build:
+      context: .
+      args:
+        SERVICE: uploader
+    image: local-grpc-uploader:latest
+    command: ["node", "services/uploader_service.js"]
+    ports:
+      - "50040:50040"
+    volumes:
+      - torch_cache:/root/.cache
+
+  local-grpc-noise:
+    build:
+      context: .
+      args:
+        SERVICE: python
+    image: local-grpc-noise:latest
+    command: ["python", "services/noise_service.py"]
+    ports:
+      - "50041:50041"
+    volumes:
+      - torch_cache:/root/.cache
+
+  local-grpc-background:
+    build:
+      context: .
+      args:
+        SERVICE: python
+    image: local-grpc-background:latest
+    command: ["python", "services/background_service.py"]
+    ports:
+      - "50042:50042"
+    volumes:
+      - torch_cache:/root/.cache
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  local-grpc-classifier:
+    build:
+      context: .
+      args:
+        SERVICE: python
+    image: local-grpc-classifier:latest
+    command: ["python", "services/classifier_service.py"]
+    ports:
+      - "50043:50043"
+    volumes:
+      - torch_cache:/root/.cache
+
+  local-grpc-orchestrator:
+    build:
+      context: .
+      args:
+        SERVICE: python
+    image: local-grpc-orchestrator:latest
+    command: ["python", "services/processor_service.py"]
+    ports:
+      - "50030:50030"
+    environment:
+      - UPLOADER_ADDR=local-grpc-uploader:50040
+      - NOISE_ADDR=local-grpc-noise:50041
+      - BACKGROUND_ADDR=local-grpc-background:50042
+      - CLASSIFIER_ADDR=local-grpc-classifier:50043
+    depends_on:
+      - local-grpc-uploader
+      - local-grpc-noise
+      - local-grpc-background
+      - local-grpc-classifier
+    volumes:
+      - torch_cache:/root/.cache
+      - ./results:/app/results
+
+volumes:
+  torch_cache:
+    driver: local
+
+

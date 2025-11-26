@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+requests
+python-multipart
+rich
+matplotlib
+Pillow
+openpyxl
+httpx

@@ -1,0 +1,12 @@
+{
+  "name": "rest-multiple-uploader",
+  "version": "1.0.0",
+  "private": true,
+  "main": "services/uploader_service.js",
+  "scripts": {
+    "start": "node services/uploader_service.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -15,7 +15,6 @@ The system processes images through several independent microservices:
 
 Each service runs independently in a Docker container, allowing scalable deployment on **single-machine** or **multi-machine (distributed)** setups.
 
----
 
 ## 🚀 Features
 
@@ -52,7 +51,7 @@ View live logs:
 docker compose logs -f
 ```
 
-### **🔧 1. Running the GRPC Version**
+### **🔧 2. Running the GRPC Version**
 ```bash
 cd multiple/grpc_version
 docker compose up -d --build
@@ -76,6 +75,8 @@ List Docker images:
 ```bash
 docker images
 ```
+
+
 ## **📦 Technologies Used**
 
 - Docker & Docker Compose

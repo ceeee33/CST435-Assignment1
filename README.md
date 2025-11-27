@@ -9,6 +9,10 @@ The system processes images through several independent microservices:
 - Background Removal Service  
 - Classifier Service  
 
+
+![Program Flow](program_flow.png)
+
+
 Each service runs independently in a Docker container, allowing scalable deployment on **single-machine** or **multi-machine (distributed)** setups.
 
 ---
